@@ -1,35 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:doiiis/widgets/task_list.dart';
 import 'package:doiiis/screens/add.dart';
-import 'package:doiiis/models/task.dart';
 import 'package:provider/provider.dart';
+import 'package:doiiis/models/task_data.dart';
 
 // ignore: must_be_immutable
-class TasksScreen extends StatefulWidget {
-  @override
-  _TasksScreenState createState() => _TasksScreenState();
-}
 
-class _TasksScreenState extends State<TasksScreen> {
-  List<Task> tasks = [];
+class TasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
+      backgroundColor: Colors.green,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: Colors.green,
         onPressed: () {
           showModalBottomSheet(
             // isScrollControlled: true,
             context: context,
             builder: (context) => SingleChildScrollView(
               child: Container(
-                child: AddPage((newTaskTitle) {
-                  setState(() {
-                    tasks.add(Task(name: newTaskTitle));
-                  });
-                  Navigator.pop(context);
-                }),
+                child: AddPage(),
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
               ),
@@ -52,7 +42,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   backgroundColor: Colors.white,
                   child: Icon(
                     Icons.list_rounded,
-                    color: Colors.lightBlueAccent,
+                    color: Colors.green,
                     size: 60,
                   ),
                 ),
@@ -77,7 +67,7 @@ class _TasksScreenState extends State<TasksScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 35.0),
                 child: Text(
-                  "${tasks.length} tasks",
+                  "${Provider.of<TaskData>(context).tasks.length} tasks",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -107,7 +97,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   child: Padding(
                     padding:
                         const EdgeInsets.only(left: 35, top: 50.0, right: 35),
-                    child: tasks.length == 0
+                    child: Provider.of<TaskData>(context).tasks.length == 0
                         ? Center(
                             child: Text(
                             'There are no doiiis',
@@ -117,7 +107,7 @@ class _TasksScreenState extends State<TasksScreen> {
                                 fontWeight: FontWeight.w500,
                                 fontFamily: 'OpenSansCondensed'),
                           ))
-                        : TasksList(tasks: tasks),
+                        : TasksList(),
                   ),
                 ),
               ),

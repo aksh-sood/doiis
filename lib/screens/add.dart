@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:doiiis/models/task_data.dart';
+import 'package:provider/provider.dart';
 
 class AddPage extends StatelessWidget {
-  AddPage(this.addTaskCallback);
-  final Function addTaskCallback;
   @override
   Widget build(BuildContext context) {
     String newTask;
@@ -15,7 +15,7 @@ class AddPage extends StatelessWidget {
             blurRadius: 30,
           ),
         ],
-        color: Color(0xFF757575),
+        color: Color(0xFF878787),
       ),
       child: Container(
         decoration: BoxDecoration(
@@ -37,7 +37,7 @@ class AddPage extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'OpenSansCondensed',
-                color: Colors.lightBlueAccent,
+                color: Colors.green,
                 fontSize: 40,
               ),
             ),
@@ -59,16 +59,24 @@ class AddPage extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.only(
+                left: 30,
+                right: 30,
+                bottom: 50,
+              ),
               // ignore: deprecated_member_use
               child: RaisedButton(
                   autofocus: true,
                   onPressed: () {
-                    addTaskCallback(newTask);
+                    newTask == null
+                        ? null
+                        : Provider.of<TaskData>(context, listen: false)
+                            .addTask(newTask);
+                    Navigator.pop(context);
                   },
                   child: Text('Add Task'),
                   textColor: Colors.white,
-                  color: Colors.lightBlueAccent),
+                  color: Colors.green),
             ),
           ],
         ),
