@@ -1,20 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:doiiis/widgets/task_list.dart';
+import 'package:doiiis/screens/add.dart';
+import 'package:doiiis/models/task.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class TasksScreen extends StatelessWidget {
-  List<String> pendingTasks = [];
+class TasksScreen extends StatefulWidget {
+  @override
+  _TasksScreenState createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+  List<Task> tasks = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.lightBlueAccent,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 445.0, right: 35),
-        child: FloatingActionButton(
-          backgroundColor: Colors.lightBlueAccent,
-          onPressed: () {},
-          child: Icon(Icons.add, size: 35),
-        ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightBlueAccent,
+        onPressed: () {
+          showModalBottomSheet(
+            // isScrollControlled: true,
+            context: context,
+            builder: (context) => SingleChildScrollView(
+              child: Container(
+                child: AddPage((newTaskTitle) {
+                  setState(() {
+                    tasks.add(Task(name: newTaskTitle));
+                  });
+                  Navigator.pop(context);
+                }),
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+              ),
+            ),
+          );
+        },
+        child: Icon(Icons.add, size: 35),
       ),
       body: SafeArea(
         child: Container(
@@ -41,7 +63,7 @@ class TasksScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 35.0),
                 child: Text(
-                  "Doiis",
+                  "Doiiis",
                   style: TextStyle(
                       fontFamily: 'Itim',
                       color: Colors.white,
@@ -55,7 +77,7 @@ class TasksScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 35.0),
                 child: Text(
-                  "12 tasks",
+                  "${tasks.length} tasks",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -68,11 +90,6 @@ class TasksScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 35, top: 50.0, right: 35),
-                    child: TasksList(),
-                  ),
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -86,6 +103,21 @@ class TasksScreen extends StatelessWidget {
                       topLeft: Radius.circular(50),
                       topRight: Radius.circular(50),
                     ),
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 35, top: 50.0, right: 35),
+                    child: tasks.length == 0
+                        ? Center(
+                            child: Text(
+                            'There are no doiiis',
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'OpenSansCondensed'),
+                          ))
+                        : TasksList(tasks: tasks),
                   ),
                 ),
               ),
